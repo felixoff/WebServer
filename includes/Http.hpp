@@ -15,14 +15,14 @@ struct StartLine
 	std::string protocol;
 };
 
-struct StartLineReq : public StartLine
+struct StartLineReq : public StartLine //стартовая строка из метода пути и запроса
 {
 	e_method	method;
 	std::string	path;
 	std::string query_string;
 };
-
-struct StartLineRes : public StartLine
+ 
+struct StartLineRes : public StartLine // строка ответа сервера с кодом
 {
 	uint16_t		status_code;
 	StartLineRes();
@@ -31,7 +31,7 @@ struct StartLineRes : public StartLine
 class Http
 {
 	protected:
-		std::map<std::string, std::string>		_headers;
+		std::map<std::string, std::string>		_headers; // карта хедеров
 		std::string								_body;
 
 	public:
