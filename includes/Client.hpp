@@ -34,6 +34,9 @@ enum e_sock_status
 #define PARSE_BODY_END 0
 #define PARSE_BODY_LEFT 1
 
+#define CGI_NONE 0
+#define CGI_PHP 1
+#define CGI_CUSTOM 2
 class Webserver;
 
 class Client
@@ -56,6 +59,14 @@ class Client
 	public:
 		Client(Socket &socket, int fd);
 
+		std::string makeContentLocation();
+		std::string makeAutoindex();
+		int isCGIRequest();
+		void makeHeadMsg();
+		void makeGetMsg(); 
+		void makePutMsg();
+		void makePostMsg();
+		void makeDeleteMsg();
 		int				getFd();
 		int				getReadFd();
 		int				getWriteFd();
@@ -66,7 +77,6 @@ class Client
 		void			setIsReadFinished(bool is_read_finished);
 		void			setReadFd(int fd);
 		void			setWriteFd(int fd);
-		
 
 		class SocketAcceptException: public std::exception
 		{
