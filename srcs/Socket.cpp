@@ -1,7 +1,7 @@
 #include "Socket.hpp"
 
 
-Socket::Socket(uint16_t port, uint32_t max_connection): _port(port)
+Socket::Socket(uint16_t port, uint32_t max_connection): _port(port) // стандартные операции для получения слушающего сокета
 {
 	if ((this->_sock_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 		throw Socket::SocketCreationException();

@@ -10,17 +10,16 @@
 class ConfigGroup
 {
 	private:
-		uint32_t							_max_connection; // def = 20
+		uint32_t							_max_connection; // по умолчанию = 20
 		std::vector< std::vector<Config> >	_configs;
 
 		void parseServer(int config_fd, std::string &line, int &gnl_status);
 		Config parseLocation(int config_fd, std::string &line, std::string &loc, Config &server_config, int &gnl_status);
 
 	public:
-		ConfigGroup(const std::string &path, uint32_t max_connection); // constructor
+		ConfigGroup(const std::string &path, uint32_t max_connection);
 		~ConfigGroup();
 
-		/* --------- getter ---------*/
 		int getServerCnt();
 		uint32_t getMaxConnection();
 		std::vector<Config> &getConfig(int index);

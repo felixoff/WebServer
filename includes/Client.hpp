@@ -5,7 +5,7 @@
 #include "utils.hpp"
 #include "Socket.hpp"
 #include <sys/socket.h>
- #include <sys/stat.h>
+#include <sys/stat.h>
 #include <arpa/inet.h>
 #include <dirent.h>
 #include <sys/types.h>
@@ -29,25 +29,54 @@ enum e_sock_status
 	SEND_DONE
 };
 
+#define BUF_SIZE 65535
+#define CLIENT_DONE_STATUS 1000
+#define PARSE_BODY_END 0
+#define PARSE_BODY_LEFT 1
 
+#define CGI_NONE 0
+#define CGI_PHP 1
+#define CGI_CUSTOM 2
 class Webserver;
 
 class Client
 {
 	private:
+		uint16_t		_port;
+		int				_fd;
+		int				_read_fd;
+		int				_write_fd;
+		e_sock_status	_sock_status;
 		HttpRequest		_request;
 		HttpResponse	_response;
-				uint16_t	_port;
-				int  _fd;
-//		std::string		_file_path;
-	//	    Config			*_config_location;
-	//	Socket			*_socket;
+		std::string		_file_path;
+		Config			*_config_location;
+		bool			_is_read_finished;
 
+		void makeFilePath();
+		void checkFilePath();
 
 	public:
 		Client(Socket &socket, int fd);
 
+		std::string makeContentLocation();
+		std::string makeAutoindex();
+		int isCGIRequest();
+		void makeHeadMsg();
+		void makeGetMsg(); 
+		void makePutMsg();
+		void makePostMsg();
+		void makeDeleteMsg();
 		int				getFd();
+		int				getReadFd();
+		int				getWriteFd();
+
+		e_sock_status	getSockStatus();
+		bool			getIsReadFinished();
+
+		void			setIsReadFinished(bool is_read_finished);
+		void			setReadFd(int fd);
+		void			setWriteFd(int fd);
 
 		class SocketAcceptException: public std::exception
 		{

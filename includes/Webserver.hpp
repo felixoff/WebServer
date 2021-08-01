@@ -2,6 +2,7 @@
 
 #include "ConfigGroup.hpp"
 #include "Socket.hpp"
+#include "Client.hpp"
 
 #include <vector>
 #include <string>
@@ -21,8 +22,8 @@ class Webserver
 		std::vector<Client>	_clients;
 
 		void acceptRequest(Socket &sock);
-	//	int readRequest(Client &client);
-	//	void handleResponse(Client &client);
+		int readRequest(Client &client);
+		void handleResponse(Client &client);
 
 		void handleClientDone(std::map<int, int>& done_info);
 

@@ -1,6 +1,7 @@
 #include "webserv.hpp"
 
-int methodToNum(const std::string &name)
+
+int methodToNum(const std::string &name) // преобразование метода в число
 {
 	if (!name.compare("GET"))
 		return GET;
@@ -17,7 +18,7 @@ int methodToNum(const std::string &name)
 }
 
 
-std::string numToMethod(const e_method num)
+std::string numToMethod(const e_method num) // преобразование enum в метод
 {
 	if (num == GET)
 		return "GET";
@@ -32,17 +33,16 @@ std::string numToMethod(const e_method num)
 	return "ERROR";
 }
 
-
-std::string makeMethodList(bool *methods)
+std::string makeMethodList(bool *methods) //
 {
 	std::string	list;
-	for (int i = 0; i <= POST; i++)
+	for (int i = 0; i <= POST; i++) // пост предпоследний индекс а нумерация от нуля
 		if (methods[i])
 		{
 			list.append(numToMethod((e_method)i));
 			list.append(", ");
 		}
-	if (!list.empty())
+	if (!list.empty()) // удалим последнюю запятую
 		list.erase(list.length() - 2);
 	return (list);
 }

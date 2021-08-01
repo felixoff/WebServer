@@ -1,6 +1,7 @@
 #include "webserv.hpp"
 
-void ConfigGroup::parseServer(int config_fd, std::string &line, int &gnl_status)
+
+void ConfigGroup::parseServer(int config_fd, std::string &line, int &gnl_status) // парсим набор конфигов из файла
 {
 	bool is_location_start = false;
 	bool is_root_set = false;
@@ -11,7 +12,7 @@ void ConfigGroup::parseServer(int config_fd, std::string &line, int &gnl_status)
 
 	while (gnl_status == GNL_OK)
 	{
-		if (isBlankLine(line))
+		if (isBlankLine(line)) // если строка пустая пропускаем
 		{
 			gnl_status = ft_getline(config_fd, line);
 			continue;
@@ -28,7 +29,7 @@ void ConfigGroup::parseServer(int config_fd, std::string &line, int &gnl_status)
             if (split.size() > 2)
                 throw ConfigGroup::ConfigFormatException();
 			is_location_start = true;
-            server_vector.push_back(parseLocation(config_fd, line, split[1], server_config, gnl_status));
+            server_vector.push_back(parseLocation(config_fd, line, split[1], server_config, gnl_status)); // добавляем конфиг для локации
 			continue;
 		}
 		if (is_location_start ||
@@ -47,12 +48,12 @@ void ConfigGroup::parseServer(int config_fd, std::string &line, int &gnl_status)
 
 	if (!checkDupLocation(server_vector))
 		throw ConfigGroup::ConfigFormatException();
-    server_vector.push_back(server_config);
+    server_vector.push_back(server_config); //добавляем основней конфиг для данного порта
 
-	_configs.push_back(server_vector);
+	_configs.push_back(server_vector); //добавляем конфиг для данного порта в общий набор конфигов
 }
 
-Config ConfigGroup::parseLocation(int config_fd, std::string &line, std::string &loc, Config &server_config, int &gnl_status)
+Config ConfigGroup::parseLocation(int config_fd, std::string &line, std::string &loc, Config &server_config, int &gnl_status) // парсим конфиг для добавления в вектор
 {
 	bool is_root_set = false;
     Config location_config(server_config, loc);
@@ -74,13 +75,13 @@ Config ConfigGroup::parseLocation(int config_fd, std::string &line, std::string 
 
 		std::vector<std::string> split = ft_split(line.substr(2), ' ');
 
-		if (split[0].compare("method") && split.size() > 2)
+		if (split[0].compare("method") && split.size() > 2) // проверка что не в строке метода не более одного аргумента
 			throw ConfigGroup::ConfigFormatException();
 
-		if (!is_root_set && split[0].compare("root"))
+		if (!is_root_set && split[0].compare("root")) // проверка на наличие рутов
 			throw ConfigGroup::ConfigFormatException();
 
-        location_config.parseConfig(split, true);
+        location_config.parseConfig(split, true); // парсим конфиг
 		is_root_set = true;
 		gnl_status = ft_getline(config_fd, line);
     }
@@ -89,7 +90,8 @@ Config ConfigGroup::parseLocation(int config_fd, std::string &line, std::string 
     return (location_config);
 }
 
-ConfigGroup::ConfigGroup(const std::string &path, uint32_t max_connection = 20): _max_connection(max_connection)
+
+ConfigGroup::ConfigGroup(const std::string &path, uint32_t max_connection = 20): _max_connection(max_connection) // конструктор
 {
 	int gnl_status;
 	int config_fd = open(path.c_str(), O_RDONLY);
@@ -118,24 +120,24 @@ ConfigGroup::ConfigGroup(const std::string &path, uint32_t max_connection = 20):
 
 ConfigGroup::~ConfigGroup() {}
 
-/* --------- getter --------- */
 
-int ConfigGroup::getServerCnt()
+int ConfigGroup::getServerCnt() // получить количество серверов
 {
     return (this->_configs.size());
 }
 
-uint32_t ConfigGroup::getMaxConnection()
+uint32_t ConfigGroup::getMaxConnection() // получить макс кол-во соединений возможное
 {
     return (this->_max_connection);
 }
 
-std::vector<Config> &ConfigGroup::getConfig(int index)
+std::vector<Config> &ConfigGroup::getConfig(int index) // получить вектор конфигов
 {
     return (this->_configs[index]);
 }
 
-bool ConfigGroup::checkDupLocation(std::vector<Config> server_vector)
+
+bool ConfigGroup::checkDupLocation(std::vector<Config> server_vector) // проверка на дубкаты путей в векторе конфигов (по одному порту)
 {
 	int size = server_vector.size();
 
@@ -150,7 +152,7 @@ bool ConfigGroup::checkDupLocation(std::vector<Config> server_vector)
 	return true;
 }
 
-bool ConfigGroup::checkDupServer()
+bool ConfigGroup::checkDupServer() // проверка на дупликаты вектора векторов конфигов (порт и имя)
 {
 	int size = getServerCnt();
 

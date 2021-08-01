@@ -10,14 +10,14 @@ struct Config
 {
 	std::string		server_name;
 	std::string		root;
-	uint16_t		port;				// def = 80;
-	std::string		index;				// def = index.html
-	std::string		error_page;			// def = error.html
-	uint64_t		body_length;		// def = 1M
-	bool			autoindex;			// def = off
-	uint32_t		timeout;			// def = 5s
+	uint16_t		port;				// по умолчанию = = 80;
+	std::string		index;				// по умолчанию = = index.html
+	std::string		error_page;			// по умолчанию = = error.html
+	uint64_t		body_length;		// по умолчанию = = 1M
+	bool			autoindex;			// по умолчанию = = off
+	uint32_t		timeout;			// по умолчанию = = 5s
 	std::string		auth;
-	bool			method[5];			// def = GET HEAD
+	bool			method[5];			// по умолчанию = = GET HEAD
 	std::string		cgi_path;
 	std::string		cgi_extension;
 	std::string		php_path;

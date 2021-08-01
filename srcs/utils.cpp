@@ -1,6 +1,7 @@
 #include "webserv.hpp"
 
-int ft_getline(int fd, std::string &line)
+
+int ft_getline(int fd, std::string &line) // аля гнл на плюсах
 {
 	size_t len = 0;
 	char buff[GNL_BUFFER];
@@ -18,7 +19,7 @@ int ft_getline(int fd, std::string &line)
 		str[fd].erase();
 		throw GNLException();
 	}
-	if (len == 0 && str[fd].empty())
+	if (len == 0 && str[fd].empty()) // когда файл считан
 	{
 		str[fd].erase();
 		line = "";
@@ -42,7 +43,7 @@ const char *GNLException::what() const throw()
 }
 
 
-std::vector<std::string> ft_split(std::string str, char delim)
+std::vector<std::string> ft_split(std::string str, char delim)//сплит в вектор
 {
 	std::vector<std::string> answer;
 	size_t curr = 0;
@@ -62,7 +63,7 @@ std::vector<std::string> ft_split(std::string str, char delim)
 }
 
 
-bool isBlankLine(const std::string &line)
+bool isBlankLine(const std::string &line) // проверка пустая ли строка
 {
 	for (size_t i = 0; i < line.size(); i++)
 	{
@@ -73,7 +74,7 @@ bool isBlankLine(const std::string &line)
 }
 
 
-void ft_trim(std::string &str, const std::string cut)
+void ft_trim(std::string &str, const std::string cut) // отрезает с обоих сторон
 {
 	std::size_t found = str.find_last_not_of(cut);
 	if (found != std::string::npos)
@@ -88,8 +89,7 @@ void ft_trim(std::string &str, const std::string cut)
 		str.clear();
 }
 
-
-int	ft_atoi(const std::string &str)
+int	ft_atoi(const std::string &str) //атой на плюсах
 {
 	long long result = 0;
 	int minus_flag = 1, index = 0;
@@ -110,7 +110,7 @@ int	ft_atoi(const std::string &str)
 	return static_cast<int>(result);
 }
 
-std::string ft_itos(int num)
+std::string ft_itos(int num) // число в строку
 {
 	std::string str;
 	long long	nbr = (long long)num;
@@ -129,45 +129,48 @@ std::string ft_itos(int num)
 	return (str);
 }
 
-std::string ft_ultohex(unsigned long num)
-{
-	std::string str;
-	unsigned long tmp;
 
-	if (num == 0)
-		return ("0");
-	while (num != 0)
-	{
-		tmp = num % 16;
-		tmp = (tmp >= 10 ? (tmp + 'A' - 10) : (tmp + '0'));
-		str = static_cast<char>(tmp) + str;
-		num /= 16;
-	}
-	return (str);
-}
+// std::string ft_ultohex(unsigned long num) // преобразование лонг в 16 строку
+// {
+// 	std::string str;
+// 	unsigned long tmp;
 
-unsigned long	ft_uhextol(const std::string &str)
-{
-	unsigned long	result = 0;
-	int				index = 0;
+// 	if (num == 0)
+// 		return ("0");
+// 	while (num != 0)
+// 	{
+// 		tmp = num % 16;
+// 		tmp = (tmp >= 10 ? (tmp + 'A' - 10) : (tmp + '0'));
+// 		str = static_cast<char>(tmp) + str;
+// 		num /= 16;
+// 	}
+// 	return (str);
+// }
 
-	while ((('0' <= str[index] && str[index] <= '9') ||
-			('A' <= str[index] && str[index] <= 'F') ||
-			('a' <= str[index] && str[index] <= 'f')) && static_cast<int>(str.length()) > index )
-	{
-		result *= 16;
-		if (str[index] <= '9')
-			result += (str[index] - '0');
-		else if (str[index] <= 'F')
-			result += (str[index] - 'A' + 10);
-		else
-			result += (str[index] - 'a' + 10);
-		index++;
-	}
-	return result;
-}
 
-std::string getHTTPTimeFormat(time_t time)
+// unsigned long	ft_uhextol(const std::string &str) // преобразование 16 строки в лонг
+// {
+// 	unsigned long	result = 0;
+// 	int				index = 0;
+
+// 	while ((('0' <= str[index] && str[index] <= '9') ||
+// 			('A' <= str[index] && str[index] <= 'F') ||
+// 			('a' <= str[index] && str[index] <= 'f')) && static_cast<int>(str.length()) > index )
+// 	{
+// 		result *= 16;
+// 		if (str[index] <= '9')
+// 			result += (str[index] - '0');
+// 		else if (str[index] <= 'F')
+// 			result += (str[index] - 'A' + 10);
+// 		else
+// 			result += (str[index] - 'a' + 10);
+// 		index++;
+// 	}
+// 	return result;
+// }
+
+
+std::string getHTTPTimeFormat(time_t time) // получение времени в нужном формате
 {
 	char s[150];
 	struct tm *tm_time = std::gmtime(&time);
@@ -176,14 +179,15 @@ std::string getHTTPTimeFormat(time_t time)
     return (s);
 }
 
-std::string getCurrentTime()
+
+std::string getCurrentTime() //получение текущего времени
 {
 	struct timeval time;
 	gettimeofday(&time, NULL);
 	return getHTTPTimeFormat(time.tv_sec);
 }
 
-bool isFilePath(const std::string &path)
+bool isFilePath(const std::string &path) // проверка явлеется ли по пути файл с помощью stat
 {
 	struct stat info;
 
@@ -198,7 +202,8 @@ bool isFilePath(const std::string &path)
 		return 0;
 }
 
-bool isDirPath(const std::string &path)
+
+bool isDirPath(const std::string &path) // проверка явлеется ли по пути директория с помощью stat
 {
 	struct stat info;
 
@@ -213,7 +218,7 @@ bool isDirPath(const std::string &path)
 		return 0;
 }
 
-std::string getStatusStr(uint16_t code)
+std::string getStatusStr(uint16_t code) // конвертор кода ответа в строку
 {
     switch (code) {
         case 200:
@@ -248,7 +253,7 @@ std::string getStatusStr(uint16_t code)
     return ("");
 }
 
-std::string ft_inet_ntoa(unsigned int addr)
+std::string ft_inet_ntoa(unsigned int addr) // ip адрес в строку
 {
 	unsigned int n = addr;
 
@@ -260,14 +265,16 @@ std::string ft_inet_ntoa(unsigned int addr)
 	return (res);
 }
 
-uint16_t ft_htons(uint16_t port)
+
+uint16_t ft_htons(uint16_t port) //шорт узловой в сетевой порядок расположения байтов
 {
 	uint16_t res = (((((unsigned short)(port) & 0xFF)) << 8) | (((unsigned short)(port) & 0xFF00) >> 8));
 
 	return (res);
 }
 
-u_int32_t ft_htonl(unsigned long int addr)
+
+u_int32_t ft_htonl(unsigned long int addr)//лонг узловой в сетевой порядок расположения байтов
 {
 	u_int32_t res = (((((unsigned long)(addr) & 0xFF)) << 24) | \
 					((((unsigned long)(addr) & 0xFF00)) << 8) | \

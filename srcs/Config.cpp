@@ -1,6 +1,7 @@
 #include "webserv.hpp"
 
-Config::Config():
+
+Config::Config(): // конструируем конфигурационный файл
 	port(80),
 	body_length(1000000),
 	autoindex(false),
@@ -10,7 +11,8 @@ Config::Config():
 	method[2] = method[3] = method[4] = false;
 }
 
-Config::Config(const Config &src, std::string &loc_path):
+
+Config::Config(const Config &src, std::string &loc_path): // конструируем конфигурационный файл
 	server_name(src.server_name),
 	root(src.root),
 	port(src.port),
@@ -31,7 +33,7 @@ Config::Config(const Config &src, std::string &loc_path):
 }
 
 
-void Config::parseConfig(std::vector<std::string> &split, bool is_location)
+void Config::parseConfig(std::vector<std::string> &split, bool is_location) // парсим конфигурационный файл (одну строку и так построчно циклическим вызовом из group)
 {
 	if (split.size() < 2)
 		throw ConfigGroup::ConfigFormatException();
@@ -114,6 +116,8 @@ void Config::parseConfig(std::vector<std::string> &split, bool is_location)
 		{
 			this->root = split[1];
 			this->server_root = this->root;
+			// this->index = this->root + "/index.html";
+			// this->error_page = this->root + "/error.html";
 		}
 	}
 	else if (!split[0].compare("cgi_path"))
